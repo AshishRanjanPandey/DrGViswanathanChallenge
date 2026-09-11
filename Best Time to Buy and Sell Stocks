@@ -1,0 +1,84 @@
+# 🎯 LeetCode 121: Best Time to Buy and Sell Stock
+
+> **Submission for**: #DrGVishwanathanChallenge
+
+---
+
+### 📝 Problem Description
+
+You are given an array `prices` where `prices[i]` is the price of a given stock on the $i^{\text{th}}$ day.
+
+You want to maximize your profit by choosing a single day to buy one stock and choosing a different day in the future to sell that stock.
+
+Return the maximum profit you can achieve from this transaction. If you cannot achieve any profit, return `0`.
+
+#### Examples
+
+- **Example 1**:
+  - **Input**: `prices = [7,1,5,3,6,4]`
+  - **Output**: `5`
+  - **Explanation**: Buy on day 2 ($\text{price} = 1$) and sell on day 5 ($\text{price} = 6$), $\text{profit} = 6 - 1 = 5$.  
+    Note that buying on day 2 and selling on day 1 is not allowed because you must buy before you sell.
+
+- **Example 2**:
+  - **Input**: `prices = [7,6,4,3,1]`
+  - **Output**: `0`
+  - **Explanation**: In this case, no transactions are done and the $\text{max profit} = 0$.
+
+#### Constraints
+
+- $1 \le \text{prices.length} \le 10^5$
+- $0 \le \text{prices}[i] \le 10^4$
+
+---
+
+### 💡 Intuition & Strategy
+
+1. **Greedy Single-Pass Tracking**:
+   - A brute-force check comparing every pair $(i, j)$ with $i < j$ requires $O(N^2)$ time, which will result in Time Limit Exceeded (TLE) for $N = 10^5$.
+   - To sell on day $i$, the maximum profit is realized by having bought at the lowest recorded price prior to day $i$.
+
+2. **State Maintenance**:
+   - Maintain a variable `minPrice` representing the minimum price encountered so far, initialized to $\infty$ (or `Integer.MAX_VALUE`).
+   - Maintain `maxProfit` initialized to `0`.
+
+3. **Dynamic Evaluation**:
+   - For each daily `price` in `prices`:
+     - If `price < minPrice`, update `minPrice = price`.
+     - Otherwise, calculate potential profit `price - minPrice` and update `maxProfit = Math.max(maxProfit, price - minPrice)`.
+
+4. **Complexity**:
+   - **Time Complexity**: $O(N)$
+     - Traverses the array of length $N$ exactly once.
+   - **Space Complexity**: $O(1)$
+     - Employs strictly auxiliary constant memory for scalar tracking variables.
+
+---
+
+### 💻 Java Solution
+
+```java
+/**
+ * Problem: Best Time to Buy and Sell Stock (LeetCode 121)
+ * Language: Java 17
+ * Time Complexity: O(N)
+ * Space Complexity: O(1)
+ * Challenge: Dr. G. Vishwanathan Challenge
+ */
+class Solution {
+
+    public int maxProfit(int[] prices) {
+        int minPrice = Integer.MAX_VALUE;
+        int maxProfit = 0;
+
+        for (int price : prices) {
+            if (price < minPrice) {
+                minPrice = price;
+            } else {
+                maxProfit = Math.max(maxProfit, price - minPrice);
+            }
+        }
+
+        return maxProfit;
+    }
+}
